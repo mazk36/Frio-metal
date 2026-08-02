@@ -5,7 +5,6 @@ const buildSequence = document.querySelector('.build-scroll');
 const buildVideo = document.querySelector('#build-video');
 const portfolioSequence = document.querySelector('.portfolio-scroll');
 const portfolioVideo = document.querySelector('#portfolio-video');
-const portfolioStage = document.querySelector('.portfolio-stage');
 const portfolioWords = [...document.querySelectorAll('.portfolio-word')];
 const year = document.querySelector('#year');
 
@@ -117,12 +116,8 @@ function updatePortfolioSequence() {
   const range = Math.max(portfolioSequence.offsetHeight - window.innerHeight, 1);
   const progress = clamp((window.scrollY - portfolioSequence.offsetTop) / range);
 
-  portfolioStage.style.setProperty('--portfolio-video-x', `${-20 + (progress * 40)}vw`);
-  portfolioStage.style.setProperty('--portfolio-video-y', `${-22 + (progress * 44)}vh`);
-  portfolioStage.style.setProperty('--portfolio-video-rotation', `${-5 + (progress * 10)}deg`);
-
   portfolioWords.forEach((word, index) => {
-    const wordProgress = clamp((progress - (index * 0.125)) / 0.19);
+    const wordProgress = clamp((progress - (0.1 + (index * 0.125))) / 0.19);
     word.style.setProperty('--portfolio-word-opacity', wordProgress.toFixed(3));
     word.style.setProperty('--portfolio-word-blur', `${((1 - wordProgress) * 10).toFixed(2)}px`);
     word.style.setProperty('--portfolio-word-y', `${((1 - wordProgress) * 22).toFixed(2)}px`);
@@ -193,35 +188,14 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-const serviceCards = [...document.querySelectorAll('[data-service-image]')];
-let serviceImageScheduled = false;
-
-function updateServiceImageReveal() {
-  const viewportHeight = window.innerHeight;
-
-  serviceCards.forEach((card) => {
-    const top = card.getBoundingClientRect().top;
-    const reveal = clamp(((viewportHeight * 0.8) - top) / (viewportHeight * 0.55));
-
-    card.style.setProperty('--service-image-opacity', (0.34 + (reveal * 0.66)).toFixed(3));
-    card.style.setProperty('--service-image-wash', (0.42 * (1 - reveal)).toFixed(3));
-    card.style.setProperty('--service-image-brightness', (0.62 + (reveal * 0.38)).toFixed(3));
-    card.style.setProperty('--service-image-grayscale', (0.5 * (1 - reveal)).toFixed(3));
-    card.style.setProperty('--service-image-blur', `${(1.4 * (1 - reveal)).toFixed(2)}px`);
-    card.style.setProperty('--service-image-scale', (1.045 - (reveal * 0.045)).toFixed(3));
+const serviceImageObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-image-visible');
+      serviceImageObserver.unobserve(entry.target);
+    }
   });
+}, { threshold: 0.05 });
 
-  serviceImageScheduled = false;
-}
-
-function requestServiceImageReveal() {
-  if (!serviceImageScheduled) {
-    serviceImageScheduled = true;
-    window.requestAnimationFrame(updateServiceImageReveal);
-  }
-}
-
-window.addEventListener('scroll', requestServiceImageReveal, { passive: true });
-window.addEventListener('resize', requestServiceImageReveal);
-requestServiceImageReveal();
+document.querySelectorAll('.service-card').forEach((card) => serviceImageObserver.observe(card));
 year.textContent = new Date().getFullYear();
