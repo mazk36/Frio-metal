@@ -33,7 +33,7 @@ body.has-left-fridge .build-scroll { z-index: 3; }
 .build-heading { margin: 0; color: #111; font-size: clamp(48px, 6.2vw, 92px); line-height: .91; letter-spacing: -.08em; }
 .build-line { display: block; white-space: nowrap; }
 .build-line--serif { font-family: Georgia, serif; font-weight: 400; }
-.build-services { width: min(330px, 100%); margin: 31px 0 0; color: rgba(17,17,17,.72); font-size: 16px; font-weight: 500; line-height: 1.72; }
+.build-services { width: min(330px, 100%); margin: 31px 0 0; color: rgba(17,17,17,.72); font-size: 15px; font-weight: 500; line-height: 1.72; }
 .build-highlight { color: var(--blue); }
 .build-project-link { display: inline-flex; align-items: center; gap: 14px; margin-top: clamp(30px, 4vw, 52px); padding: 15px 20px; color: #fff; pointer-events: none; opacity: 0; background: var(--blue); box-shadow: 0 10px 24px rgba(0,71,183,.2); font: 800 14px Manrope, Arial, sans-serif; letter-spacing: -.025em; transform: translateY(18px); transition: opacity .3s ease, background .25s ease, box-shadow .25s ease, transform .38s cubic-bezier(.2,.7,.2,1); }
 .build-project-link.is-visible { pointer-events: auto; opacity: 1; transform: translateY(0); }
@@ -145,7 +145,7 @@ body.has-left-fridge .build-scroll { z-index: 3; }
 .build-stage { grid-template-columns: 1fr; grid-template-rows: 1fr auto; align-content: center; padding: 72px 20px 30px; }
 .build-copy { padding: 0; }
 .build-heading { font-size: clamp(44px, 13vw, 70px); }
-.build-services { margin-top: 20px; font-size: 14px; }
+.build-services { margin-top: 20px; font-size: 13px; }
 .build-project-link { margin-top: 30px; }
 .build-visual { width: min(100%, 560px); margin: 30px auto 0; }
 .introduction, .solutions { padding: 86px 0; }
