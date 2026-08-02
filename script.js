@@ -3,6 +3,7 @@ const sequence = document.querySelector('.fridge-scroll');
 const video = document.querySelector('#door-video');
 const buildSequence = document.querySelector('.build-scroll');
 const buildVideo = document.querySelector('#build-video');
+const buildProjectLink = document.querySelector('.build-project-link');
 const portfolioSequence = document.querySelector('.portfolio-scroll');
 const portfolioVideo = document.querySelector('#portfolio-video');
 const portfolioWords = [...document.querySelectorAll('.portfolio-word')];
@@ -91,6 +92,8 @@ function updateBuildSequence() {
     revealedCharacters -= 1;
     scrollCharacters[revealedCharacters].classList.remove('is-revealed');
   }
+
+  buildProjectLink.classList.toggle('is-visible', progress >= 0.74);
 
   if (Number.isFinite(buildVideo.duration) && buildVideo.duration > 0 && buildVideo.readyState >= 2) {
     const endFrame = Math.min(buildVideo.duration - 0.08, 6.6);
