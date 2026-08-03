@@ -2,6 +2,7 @@ const root = document.documentElement;
 const sequence = document.querySelector('.fridge-scroll');
 const video = document.querySelector('#door-video');
 const buildSequence = document.querySelector('.build-scroll');
+const buildStage = document.querySelector('.build-stage');
 const buildVideo = document.querySelector('#build-video');
 const buildProjectLink = document.querySelector('.build-project-link');
 const portfolioSequence = document.querySelector('.portfolio-scroll');
@@ -80,7 +81,7 @@ function requestSequenceUpdate() {
 }
 
 function updateBuildSequence() {
-  const range = Math.max(buildSequence.offsetHeight - window.innerHeight, 1);
+  const range = Math.max(buildSequence.offsetHeight - buildStage.offsetHeight, 1);
   const progress = clamp((window.scrollY - buildSequence.offsetTop) / range);
   const textProgress = clamp(progress / 0.72);
   const targetCharacter = Math.round(textProgress * scrollCharacters.length);
