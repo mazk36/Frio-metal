@@ -205,14 +205,13 @@ const serviceImageObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.service-card').forEach((card) => serviceImageObserver.observe(card));
 
 if (projectSection && projectFans.length) {
+  const projectFanThreshold = 0.34;
   const projectFanObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        projectSection.classList.add('is-fans-visible');
-        projectFanObserver.unobserve(projectSection);
-      }
+      const isVisible = entry.intersectionRatio >= projectFanThreshold;
+      projectFans.forEach((fan) => fan.classList.toggle('is-visible', isVisible));
     });
-  }, { threshold: 0.12 });
+  }, { threshold: projectFanThreshold });
 
   projectFanObserver.observe(projectSection);
 }
