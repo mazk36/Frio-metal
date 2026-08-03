@@ -7,6 +7,8 @@ const buildProjectLink = document.querySelector('.build-project-link');
 const portfolioSequence = document.querySelector('.portfolio-scroll');
 const portfolioVideo = document.querySelector('#portfolio-video');
 const portfolioWords = [...document.querySelectorAll('.portfolio-word')];
+const projectSection = document.querySelector('.project');
+const projectFans = [...document.querySelectorAll('.project-fan')];
 const year = document.querySelector('#year');
 
 let scheduled = false;
@@ -201,4 +203,18 @@ const serviceImageObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.05 });
 
 document.querySelectorAll('.service-card').forEach((card) => serviceImageObserver.observe(card));
+
+if (projectSection && projectFans.length) {
+  const projectFanObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        projectSection.classList.add('is-fans-visible');
+        projectFanObserver.unobserve(projectSection);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  projectFanObserver.observe(projectSection);
+}
+
 year.textContent = new Date().getFullYear();
