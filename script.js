@@ -8,6 +8,7 @@ const portfolioSequence = document.querySelector('.portfolio-scroll');
 const portfolioVideo = document.querySelector('#portfolio-video');
 const portfolioWords = [...document.querySelectorAll('.portfolio-word')];
 const projectSection = document.querySelector('.project');
+const projectLink = document.querySelector('.project-link');
 const projectFans = [...document.querySelectorAll('.project-fan')];
 const year = document.querySelector('#year');
 
@@ -214,6 +215,45 @@ if (projectSection && projectFans.length) {
   }, { threshold: projectFanThreshold });
 
   projectFanObserver.observe(projectSection);
+
+  if (projectLink) {
+    let pointerOverProjectLink = false;
+    let projectLinkFocused = false;
+
+    const updateFanPlayback = () => {
+      const shouldPlay = pointerOverProjectLink || projectLinkFocused;
+
+      projectFans.forEach((fan) => {
+        if (shouldPlay) {
+          const playRequest = fan.play();
+          if (playRequest) playRequest.catch(() => {});
+        } else {
+          fan.pause();
+          fan.currentTime = 0;
+        }
+      });
+    };
+
+    projectLink.addEventListener('pointerenter', () => {
+      pointerOverProjectLink = true;
+      updateFanPlayback();
+    });
+    projectLink.addEventListener('pointerleave', () => {
+      pointerOverProjectLink = false;
+      updateFanPlayback();
+    });
+    projectLink.addEventListener('focus', () => {
+      projectLinkFocused = true;
+      updateFanPlayback();
+    });
+    projectLink.addEventListener('blur', () => {
+      projectLinkFocused = false;
+      updateFanPlayback();
+    });
+
+    updateFanPlayback();
+
+  }
 }
 
 year.textContent = new Date().getFullYear();

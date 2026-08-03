@@ -216,4 +216,4 @@ body.has-left-fridge .build-scroll { z-index: 3; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; transition-duration: .001ms !important; }
 .project-fan { pointer-events: auto; opacity: 1; transform: none; transition: none; }
- }
+}
