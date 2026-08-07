@@ -5,7 +5,9 @@ const projectsBackButton = document.querySelector('.projects-back-button');
 const projectsGrid = document.querySelector('.projects-grid');
 const projectCards = [...document.querySelectorAll('.project-card')];
 const precisePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+// La experiencia de proyectos fue diseñada alrededor de estas transiciones.
+// Se mantiene activa aunque el navegador solicite reducir movimiento.
+const reducedMotion = { matches: false };
 
 if (projectsHero && projectsTitle) {
   let fadeScheduled = false;
