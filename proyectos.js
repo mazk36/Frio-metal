@@ -9,19 +9,35 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 if (projectsHero && projectsTitle) {
   let fadeScheduled = false;
   let replayArmed = false;
+  let replayFrame = 0;
+  let replayAnimationFrame = 0;
+  let replayVariant = 'b';
 
   projectsTitleLetters.forEach((letter, index) => {
     letter.style.setProperty('--letter-delay', `${index * 45}ms`);
   });
 
   const replayTitle = () => {
-    projectsTitle.classList.remove('is-building');
+    window.cancelAnimationFrame(replayFrame);
+    window.cancelAnimationFrame(replayAnimationFrame);
+    projectsTitle.classList.add('is-resetting');
+    projectsTitle.classList.remove('is-building-a', 'is-building-b');
+    projectsTitle.classList.remove('is-faded');
+    replayVariant = replayVariant === 'a' ? 'b' : 'a';
 
-    if (!reducedMotion.matches) {
-      void projectsTitle.offsetWidth;
+    if (reducedMotion.matches) {
+      projectsTitle.classList.remove('is-resetting');
+      projectsTitle.classList.add(`is-building-${replayVariant}`);
+      return;
     }
 
-    projectsTitle.classList.add('is-building');
+    replayFrame = window.requestAnimationFrame(() => {
+      projectsTitle.classList.remove('is-resetting');
+
+      replayAnimationFrame = window.requestAnimationFrame(() => {
+        projectsTitle.classList.add(`is-building-${replayVariant}`);
+      });
+    });
   };
 
   replayTitle();
@@ -34,9 +50,12 @@ if (projectsHero && projectsTitle) {
     projectsTitle.style.setProperty('--hero-fade', fadeProgress.toFixed(3));
     projectsTitle.style.setProperty('--hero-shift', `${(-fadeProgress * 28).toFixed(2)}px`);
     projectsTitle.style.setProperty('--hero-scale', (1 - fadeProgress * 0.02).toFixed(3));
-    projectsTitle.classList.toggle('is-faded', fadeProgress >= 1 && !reducedMotion.matches);
 
-    if (fadeProgress >= 1) {
+    if (reducedMotion.matches) {
+      projectsTitle.classList.remove('is-faded');
+      replayArmed = false;
+    } else if (fadeProgress >= 1) {
+      projectsTitle.classList.add('is-faded');
       replayArmed = true;
     } else if (fadeProgress <= 0.08 && replayArmed) {
       replayTitle();
@@ -127,8 +146,41 @@ const clientsSection = document.querySelector('.clients-section');
 
 if (clientsSection) {
   let clientsAnimationScheduled = false;
+  let clientsAmbientTimer = 0;
   let lastClientsScrollY = window.scrollY;
   let clientsScrollDirection = 'down';
+  const clientsLastRowDelay = 1050;
+  const clientsEntryDuration = 620;
+  const clientsAmbientPause = 320;
+  const clientsAmbientDelay = clientsLastRowDelay + clientsEntryDuration + clientsAmbientPause;
+
+  const stopClientsAmbient = () => {
+    window.clearTimeout(clientsAmbientTimer);
+    clientsAmbientTimer = 0;
+    clientsSection.classList.remove('is-ambient');
+  };
+
+  const activateClients = () => {
+    if (clientsSection.classList.contains('is-active')) {
+      return;
+    }
+
+    stopClientsAmbient();
+    clientsSection.classList.add('is-active');
+
+    if (!reducedMotion.matches) {
+      clientsAmbientTimer = window.setTimeout(() => {
+        if (clientsSection.classList.contains('is-active')) {
+          clientsSection.classList.add('is-ambient');
+        }
+      }, clientsAmbientDelay);
+    }
+  };
+
+  const deactivateClients = () => {
+    stopClientsAmbient();
+    clientsSection.classList.remove('is-active');
+  };
 
   const updateClientsAnimation = () => {
     const sectionRect = clientsSection.getBoundingClientRect();
@@ -139,6 +191,12 @@ if (clientsSection) {
     const visibleRatio = sectionRect.height > 0 ? visibleHeight / sectionRect.height : 0;
     const currentScrollY = window.scrollY;
     const scrollDelta = currentScrollY - lastClientsScrollY;
+    const projectsExitProgress = Math.min(Math.max(visibleRatio / 0.24, 0), 1);
+
+    if (projectsGrid && !reducedMotion.matches) {
+      projectsGrid.style.setProperty('--projects-scene-opacity', (1 - projectsExitProgress).toFixed(3));
+      projectsGrid.style.setProperty('--projects-scene-shift', `${(-projectsExitProgress * 30).toFixed(2)}px`);
+    }
 
     if (Math.abs(scrollDelta) >= 4) {
       clientsScrollDirection = scrollDelta > 0 ? 'down' : 'up';
@@ -146,13 +204,13 @@ if (clientsSection) {
     }
 
     if (reducedMotion.matches) {
-      clientsSection.classList.add('is-active');
+      activateClients();
     } else if (visibleRatio === 0) {
-      clientsSection.classList.remove('is-active');
+      deactivateClients();
     } else if (clientsScrollDirection === 'down' && visibleRatio >= 0.24) {
-      clientsSection.classList.add('is-active');
+      activateClients();
     } else if (clientsScrollDirection === 'up' && visibleRatio <= 0.78) {
-      clientsSection.classList.remove('is-active');
+      deactivateClients();
     }
 
     clientsAnimationScheduled = false;
