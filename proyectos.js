@@ -1,6 +1,7 @@
 const projectsHero = document.querySelector('.projects-intro');
 const projectsTitle = document.querySelector('.projects-title');
 const projectsTitleLetters = [...document.querySelectorAll('.projects-title-letter')];
+const projectsBackButton = document.querySelector('.projects-back-button');
 const projectsGrid = document.querySelector('.projects-grid');
 const projectCards = [...document.querySelectorAll('.project-card')];
 const precisePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -23,11 +24,13 @@ if (projectsHero && projectsTitle) {
     projectsTitle.classList.add('is-resetting');
     projectsTitle.classList.remove('is-building-a', 'is-building-b');
     projectsTitle.classList.remove('is-faded');
+    projectsBackButton?.classList.remove('is-visible', 'is-faded');
     replayVariant = replayVariant === 'a' ? 'b' : 'a';
 
     if (reducedMotion.matches) {
       projectsTitle.classList.remove('is-resetting');
       projectsTitle.classList.add(`is-building-${replayVariant}`);
+      projectsBackButton?.classList.add('is-visible');
       return;
     }
 
@@ -36,6 +39,7 @@ if (projectsHero && projectsTitle) {
 
       replayAnimationFrame = window.requestAnimationFrame(() => {
         projectsTitle.classList.add(`is-building-${replayVariant}`);
+        projectsBackButton?.classList.add('is-visible');
       });
     });
   };
@@ -50,6 +54,12 @@ if (projectsHero && projectsTitle) {
     projectsTitle.style.setProperty('--hero-fade', fadeProgress.toFixed(3));
     projectsTitle.style.setProperty('--hero-shift', `${(-fadeProgress * 28).toFixed(2)}px`);
     projectsTitle.style.setProperty('--hero-scale', (1 - fadeProgress * 0.02).toFixed(3));
+
+    if (projectsBackButton) {
+      projectsBackButton.style.setProperty('--back-fade', fadeProgress.toFixed(3));
+      projectsBackButton.style.setProperty('--back-scroll-shift', `${(-fadeProgress * 18).toFixed(2)}px`);
+      projectsBackButton.classList.toggle('is-faded', fadeProgress >= 1 && !reducedMotion.matches);
+    }
 
     if (reducedMotion.matches) {
       projectsTitle.classList.remove('is-faded');
@@ -75,6 +85,26 @@ if (projectsHero && projectsTitle) {
   window.addEventListener('scroll', requestTitleFadeUpdate, { passive: true });
   window.addEventListener('resize', requestTitleFadeUpdate);
   requestTitleFadeUpdate();
+}
+
+if (projectsBackButton) {
+  projectsBackButton.addEventListener('click', () => {
+    let hasSafeHistory = false;
+
+    if (window.history.length > 1 && document.referrer) {
+      try {
+        hasSafeHistory = new URL(document.referrer).origin === window.location.origin;
+      } catch {
+        hasSafeHistory = false;
+      }
+    }
+
+    if (hasSafeHistory) {
+      window.history.back();
+    } else {
+      window.location.assign('./index.html');
+    }
+  });
 }
 
 if (projectsGrid) {

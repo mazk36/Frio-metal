@@ -33,6 +33,7 @@ img {
 }
 
 .projects-intro {
+  position: relative;
   display: grid;
   min-height: 100vh;
   min-height: 100svh;
@@ -40,6 +41,73 @@ img {
   padding: clamp(12px, 2.5vw, 36px);
   overflow: hidden;
   background: var(--paper);
+}
+
+.projects-back-button {
+  --back-fade: 0;
+  --back-scroll-shift: 0px;
+  position: absolute;
+  z-index: 2;
+  top: clamp(45px, 6vh, 68px);
+  left: clamp(50px, 5vw, 78px);
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 22px;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--brand-blue);
+  box-shadow: 0 10px 24px rgba(0, 71, 183, .2);
+  font: 800 15px Manrope, Arial, sans-serif;
+  letter-spacing: -.025em;
+  transform: translate3d(-12px, 0, 0);
+  transition:
+    opacity .62s ease,
+    background .25s ease,
+    box-shadow .25s ease,
+    transform .62s cubic-bezier(.2, .7, .2, 1);
+}
+
+.projects-back-button.is-visible {
+  pointer-events: auto;
+  opacity: calc(1 - var(--back-fade));
+  transform: translate3d(var(--back-scroll-shift), 0, 0);
+}
+
+.projects-back-button.is-faded {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.projects-back-button svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .25s ease;
+}
+
+.projects-back-button:hover {
+  background: #003581;
+  box-shadow: 0 15px 30px rgba(0, 71, 183, .3);
+  transform: translate3d(var(--back-scroll-shift), -3px, 0);
+}
+
+.projects-back-button:hover svg {
+  transform: translateX(-3px);
+}
+
+.projects-back-button:focus-visible {
+  outline: 3px solid var(--brand-blue);
+  outline-offset: 5px;
 }
 
 .projects-title {
@@ -427,6 +495,14 @@ img {
 }
 
 @media (max-width: 900px) {
+  .projects-back-button {
+    top: 36px;
+    left: 36px;
+    min-height: 48px;
+    padding: 13px 20px;
+    font-size: 14px;
+  }
+
   .clients-section {
     min-height: 100svh;
     padding: clamp(80px, 11vw, 104px) clamp(18px, 4vw, 36px) clamp(90px, 12vw, 120px);
@@ -438,6 +514,19 @@ img {
 }
 
 @media (max-width: 600px) {
+  .projects-back-button {
+    top: 22px;
+    left: 20px;
+    min-height: 46px;
+    gap: 10px;
+    padding: 12px 17px;
+  }
+
+  .projects-back-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
   .clients-section {
     min-height: 100svh;
     padding: 72px 16px 88px;
@@ -506,6 +595,13 @@ img {
   .projects-title {
     opacity: 1;
     transform: none;
+  }
+
+  .projects-back-button,
+  .projects-back-button.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 
   .projects-title-letter,
