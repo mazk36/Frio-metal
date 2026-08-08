@@ -3,7 +3,7 @@ name: Publicar revision temporal
 on:
   push:
     branches:
-      - codex/landing-footer-logo
+      - main
   workflow_dispatch:
 
 permissions:
